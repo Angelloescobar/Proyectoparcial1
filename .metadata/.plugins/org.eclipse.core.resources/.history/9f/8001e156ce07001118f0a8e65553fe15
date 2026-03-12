@@ -1,0 +1,152 @@
+package com.tarea1;
+
+/**
+ * Hello world!
+ */
+public class App {
+
+    public static void main(String[] args) {
+    	// a) "Hola mundo"
+        System.out.println("Hola mundo desde Java");
+        
+        // b) multiplicacion de dos numeros
+        int num1 =6;
+        int num2 =7;
+        int resultado = num1*num2;
+        System.out.println("Rusultado:" + resultado);
+        //Investigacion de preguntas en Java
+        //¿Cómo se declara un arreglo en Java?
+        //String[] nombres = new String[3];
+       // String[] frutas = {"Manzana", "Banano", "Uva"};
+        
+        //Métodos y utilidades principales para arreglos
+   /*
+    *  Arrays.binarySearch()
+ int[] valores = {10, 20, 30, 40, 50};
+
+int posicion = Arrays.binarySearch(valores, 30);
+System.out.println(posicion);
+
+ Arrays.copyOf()
+ int[] valores = {1, 2, 3};
+
+int[] copia = Arrays.copyOf(valores, 5);
+System.out.println(Arrays.toString(copia));
+ Arrays.fill()
+  int[] valores = new int[4];
+
+Arrays.fill(valores, 9);
+System.out.println(Arrays.toString(valores));
+
+ Arrays.equals()
+ int[] a = {1, 2, 3};
+int[] b = {1, 2, 3};
+
+boolean iguales = Arrays.equals(a, b);
+System.out.println(iguales);
+
+  Arrays.stream()
+ int[] valores = {5, 10, 15, 20};
+
+int suma = Arrays.stream(valores).sum();
+System.out.println(suma);
+    */
+        
+        //¿Cómo se recorren los arreglos en Java?
+        //for (int i = 0; i < valores.length; i++) {
+      //  System.out.println(valores[i]); }
+        
+        //for (int i = 0; i < valores.length; i++) {
+        //System.out.println(valores[i]); }
+        
+        //for (int valor : valores) {
+        //System.out.println(valor);
+        }
+        //Diferencias entre arreglos y ArrayList en Java
+
+/*
+ Arreglos (Arrays) → Tamaño fijo
+
+Cuando creas un arreglo, su tamaño no puede cambiar.
+ int[] numeros = new int[3];
+
+numeros[0] = 10;
+numeros[1] = 20;
+numeros[2] = 30;
+
+// numeros[3] = 40; ❌ Error (no existe esa posición)
+ ArrayList → Tamaño dinámico
+
+Puede crecer o disminuir automáticamente.
+ ArrayList<Integer> numeros = new ArrayList<>();
+
+numeros.add(10);
+numeros.add(20);
+numeros.add(30);
+numeros.add(40); // ✅ Se agrega sin problema
+ Tipos primitivos vs Clases envolventes
+
+✅ Arreglos → Aceptan primitivos directamente
+ int[] numeros = {1, 2, 3};
+:double[] precios = {10.5, 20.3};
+ ArrayList → Solo acepta objetos
+
+No puedes usar int, debes usar su clase envolvente Integer.
+ ArrayList<Integer> numeros = new ArrayList<>();
+numeros.add(10);
+ Métodos disponibles
+
+✅ Arreglos
+
+Tienen muy pocos métodos propios.
+ int[] numeros = {1, 2, 3};
+
+System.out.println(numeros.length); // tamaño
+ Solo tienen:
+	•	length (propiedad)
+	•	Métodos auxiliares con Arrays (sort, equals, etc.)
+: ArrayList
+
+Tiene muchos métodos útiles:
+ ArrayList<String> nombres = new ArrayList<>();
+
+nombres.add("Ana");        // Agregar
+nombres.remove("Ana");     // Eliminar
+nombres.get(0);            // Obtener elemento
+nombres.set(0, "Luis");    // Modificar
+nombres.size();            // Tamaño
+nombres.clear();           // Vaciar lista
+ Rendimiento
+
+✅ Arreglos → Más rápidos
+	•	Acceso directo muy rápido
+	•	Menos consumo de memoria
+	•	Mejor rendimiento en cálculos intensivos
+ int[] datos = new int[1000000];
+: ArrayList → Un poco más lento
+	•	Usa objetos (más memoria)
+	•	Redimensiona internamente
+	•	Más flexible pero con ligera sobrecarga
+ ¿Cuándo usar cada uno?
+
+✅ Usa ARREGLOS cuando:
+
+✔ El tamaño no cambiará
+✔ Necesitas máximo rendimiento
+✔ Trabajas con muchos datos numéricos
+✔ Haces algoritmos o estructuras básicas
+
+⸻
+
+✅ Usa ARRAYLIST cuando:
+
+✔ No sabes cuántos elementos tendrás
+✔ Necesitas agregar y eliminar frecuentemente
+✔ Quieres muchos métodos útiles
+✔ Trabajas con objetos
+ */
+*/
+    
+    }
+}
+

@@ -1,0 +1,5 @@
+package com.demo.producer.mq;
+
+public class RabbitPublisher {
+
+}

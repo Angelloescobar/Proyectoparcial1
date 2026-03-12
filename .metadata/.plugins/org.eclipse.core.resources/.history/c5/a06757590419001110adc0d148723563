@@ -1,0 +1,5 @@
+package com.demo.producer.model;
+
+public class LoteTransacciones {
+
+}

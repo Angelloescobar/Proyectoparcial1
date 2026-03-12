@@ -1,0 +1,5 @@
+package com.demo.consumer.mq;
+
+public class RabbitConsumerManager {
+
+}

@@ -1,0 +1,5 @@
+package com.demo.producer.api;
+
+public class TransaccionesGetClient {
+
+}

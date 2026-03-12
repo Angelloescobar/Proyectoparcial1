@@ -1,0 +1,5 @@
+package com.demo.consumer.api;
+
+public class GuardarTransaccionClient {
+
+}

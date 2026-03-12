@@ -1,0 +1,57 @@
+package com.demo.producer;
+
+import com.demo.producer.api.TransaccionesGetClient;
+import com.demo.producer.model.LoteTransacciones;
+import com.demo.producer.model.Transaccion;
+import com.demo.producer.mq.RabbitPublisher;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class ProducerApp {
+
+    public static void main(String[] args) {
+
+        String getUrl = "https://hly784ig9d.execute-api.us-east-1.amazonaws.com/default/transacciones";
+
+        String rabbitHost = "localhost";
+        int rabbitPort = 5672;
+        String rabbitUser = "guest";
+        String rabbitPass = "guest";
+
+        ObjectMapper mapper = new ObjectMapper();
+        RabbitPublisher publisher = null;
+
+        try {
+
+            TransaccionesGetClient client = new TransaccionesGetClient(getUrl);
+            LoteTransacciones lote = client.obtenerTransacciones();
+
+            publisher = new RabbitPublisher(rabbitHost, rabbitPort, rabbitUser, rabbitPass);
+
+            System.out.println("Lote recibido: " + lote.loteId);
+            System.out.println("Total transacciones: " + lote.transacciones.size());
+
+            for (Transaccion t : lote.transacciones) {
+
+                String banco = t.bancoDestino;
+                String json = mapper.writeValueAsString(t);
+
+                publisher.publicar(banco, json);
+
+                System.out.println("Enviado a cola: " + banco);
+            }
+
+            System.out.println("Producer finalizado.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (publisher != null) {
+                    publisher.cerrar();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}

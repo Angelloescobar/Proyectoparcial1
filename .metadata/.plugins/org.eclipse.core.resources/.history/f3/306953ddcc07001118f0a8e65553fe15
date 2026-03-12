@@ -1,0 +1,18 @@
+package com.tarea1;
+
+/**
+ * Hello world!
+ */
+public class App {
+
+    public static void main(String[] args) {
+    	// a) "Hola mundo"
+        System.out.println("Hola mundo desde Java");
+        
+        // b) multiplicacion de dos numeros
+        int num1 =6;
+        int num2 =7;
+        int resultado = num1*num2;
+        System.out.println("Rusultado:" + resultado);
+    }
+}

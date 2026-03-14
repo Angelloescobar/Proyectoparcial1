@@ -70,14 +70,13 @@ public class RabbitConsumerManager {
                     System.out.println("JSON original:");
                     System.out.println(mensajeJson);
 
-                    // Convertir JSON a objeto modificable
                     ObjectNode jsonNode = (ObjectNode) mapper.readTree(mensajeJson);
 
-                    // Agregar los nuevos atributos solicitados
+                    // Agregar datos solicitados
                     jsonNode.put("nombre", "Angello Escobar");
                     jsonNode.put("carnet", "0905-24-22482");
+                    jsonNode.put("correo", "aescobarg21@miumg.edu.gt");
 
-                    // Convertir nuevamente a String
                     String nuevoJson = mapper.writeValueAsString(jsonNode);
 
                     System.out.println("JSON enviado al POST:");

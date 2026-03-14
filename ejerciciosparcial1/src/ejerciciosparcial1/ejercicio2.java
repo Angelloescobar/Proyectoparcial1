@@ -38,3 +38,9 @@ public class ejercicio2 {
         System.out.println("Resultado: " + Arrays.toString(resultado));
     }
 }
+
+
+
+
+
+

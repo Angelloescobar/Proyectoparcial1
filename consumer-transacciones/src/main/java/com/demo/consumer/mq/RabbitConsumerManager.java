@@ -3,10 +3,13 @@ package com.demo.consumer.mq;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.demo.consumer.api.GuardarTransaccionClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.CancelCallback;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -20,6 +23,9 @@ public class RabbitConsumerManager {
     private final String username;
     private final String password;
     private final GuardarTransaccionClient postClient;
+
+    
+    private final Set<String> idsProcesados = ConcurrentHashMap.newKeySet();
 
     public RabbitConsumerManager(String host, int port, String username, String password,
             GuardarTransaccionClient postClient) {
@@ -53,6 +59,9 @@ public class RabbitConsumerManager {
                 "BI"
         );
 
+        
+        channel.queueDeclare("cola_duplicados", true, false, false, null);
+
         ObjectMapper mapper = new ObjectMapper();
 
         for (String banco : bancos) {
@@ -65,14 +74,33 @@ public class RabbitConsumerManager {
                 long deliveryTag = delivery.getEnvelope().getDeliveryTag();
 
                 try {
-
-                    System.out.println("Mensaje recibido de cola: " + banco);
-                    System.out.println("JSON original:");
+                    System.out.println("======================================");
+                    System.out.println("Cola atendida: " + banco);
+                    System.out.println("JSON original recibido:");
                     System.out.println(mensajeJson);
 
                     ObjectNode jsonNode = (ObjectNode) mapper.readTree(mensajeJson);
 
-                    // Agregar datos solicitados
+                    String idTransaccion = jsonNode.get("idTransaccion").asText();
+
+                    System.out.println("ID de la solicitud procesada: " + idTransaccion);
+
+                   
+                    if (idsProcesados.contains(idTransaccion)) {
+
+                        
+                        enviarAColaDuplicados(channel, mensajeJson);
+
+                       
+                        channel.basicAck(deliveryTag, false);
+
+                        System.out.println("Estado: DUPLICADA");
+                        System.out.println("Cola destino: cola_duplicados");
+                        System.out.println("======================================");
+                        return;
+                    }
+
+                   
                     jsonNode.put("nombre", "Angello Escobar");
                     jsonNode.put("carnet", "0905-24-22482");
                     jsonNode.put("correo", "aescobarg21@miumg.edu.gt");
@@ -86,7 +114,13 @@ public class RabbitConsumerManager {
 
                     if (status == 200 || status == 201) {
 
+                       
+                        idsProcesados.add(idTransaccion);
+
                         channel.basicAck(deliveryTag, false);
+
+                        System.out.println("Estado: PROCESADA");
+                        System.out.println("Cola destino: POST /guardarTransacciones");
                         System.out.println("POST exitoso. ACK enviado. Status: " + status);
 
                     } else {
@@ -97,20 +131,34 @@ public class RabbitConsumerManager {
 
                         if (segundoIntento == 200 || segundoIntento == 201) {
 
+                            
+                            idsProcesados.add(idTransaccion);
+
                             channel.basicAck(deliveryTag, false);
+
+                            System.out.println("Estado: PROCESADA");
+                            System.out.println("Cola destino: POST /guardarTransacciones");
                             System.out.println("POST exitoso en reintento. ACK enviado. Status: " + segundoIntento);
 
                         } else {
 
                             channel.basicNack(deliveryTag, false, true);
+
+                            System.out.println("Estado: ERROR");
+                            System.out.println("Cola destino: requeue");
                             System.out.println("Falló otra vez. NACK con requeue. Status: " + segundoIntento);
                         }
                     }
 
+                    System.out.println("======================================");
+
                 } catch (Exception e) {
 
                     channel.basicNack(deliveryTag, false, true);
+                    System.out.println("Estado: ERROR");
+                    System.out.println("Cola destino: requeue");
                     System.out.println("Error procesando mensaje: " + e.getMessage());
+                    System.out.println("======================================");
                 }
             };
 
@@ -123,6 +171,16 @@ public class RabbitConsumerManager {
             System.out.println("Escuchando cola: " + banco);
         }
 
+        System.out.println("Escuchando cola adicional: cola_duplicados");
         System.out.println("Consumer activo. Esperando mensajes...");
+    }
+
+    private void enviarAColaDuplicados(Channel channel, String mensajeJson) throws Exception {
+        AMQP.BasicProperties props = new AMQP.BasicProperties.Builder()
+                .contentType("application/json")
+                .deliveryMode(2)
+                .build();
+
+        channel.basicPublish("", "cola_duplicados", props, mensajeJson.getBytes(StandardCharsets.UTF_8));
     }
 }
